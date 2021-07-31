@@ -9,6 +9,7 @@ import one.digitalinnovation.projects.mathsphysis.beerstock.enums.BeerType;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -34,5 +35,6 @@ public class BeerDTO {
     private Integer quantity;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private BeerType type;
 }
