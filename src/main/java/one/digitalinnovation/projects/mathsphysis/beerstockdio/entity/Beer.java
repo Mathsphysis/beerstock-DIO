@@ -1,10 +1,10 @@
-package one.digitalinnovation.projects.mathsphysis.beerstockdio.entity;
+package one.digitalinnovation.projects.mathsphysis.beerstock.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.enums.BeerType;
+import one.digitalinnovation.projects.mathsphysis.beerstock.enums.BeerType;
 
 import javax.persistence.*;
 

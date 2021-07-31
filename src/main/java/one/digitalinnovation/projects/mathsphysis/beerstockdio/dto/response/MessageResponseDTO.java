@@ -1,4 +1,4 @@
-package one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.response;
+package one.digitalinnovation.projects.mathsphysis.beerstock.dto.response;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package one.digitalinnovation.projects.mathsphysis.beerstockdio.enums;
+package one.digitalinnovation.projects.mathsphysis.beerstock.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

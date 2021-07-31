@@ -1,13 +1,13 @@
-package one.digitalinnovation.projects.mathsphysis.beerstockdio.service;
+package one.digitalinnovation.projects.mathsphysis.beerstock.service;
 
 import lombok.AllArgsConstructor;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.request.BeerDTO;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.response.MessageResponseDTO;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.entity.Beer;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerAlreadyRegisteredException;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerNotFoundException;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.mapper.BeerMapper;
-import one.digitalinnovation.projects.mathsphysis.beerstockdio.repository.BeerRepository;
+import one.digitalinnovation.projects.mathsphysis.beerstock.dto.request.BeerDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstock.dto.response.MessageResponseDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstock.entity.Beer;
+import one.digitalinnovation.projects.mathsphysis.beerstock.exception.BeerAlreadyRegisteredException;
+import one.digitalinnovation.projects.mathsphysis.beerstock.exception.BeerNotFoundException;
+import one.digitalinnovation.projects.mathsphysis.beerstock.mapper.BeerMapper;
+import one.digitalinnovation.projects.mathsphysis.beerstock.repository.BeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +71,7 @@ public class BeerService {
 
     private void verifyIfIsAlreadyRegistered(String name) throws BeerAlreadyRegisteredException {
         Optional<Beer> optSavedBeer = beerRepository.findByName(name);
-        if (optSavedBeer.isPresent()) {
+        if( optSavedBeer.isPresent()){
             throw new BeerAlreadyRegisteredException(name);
         }
 
