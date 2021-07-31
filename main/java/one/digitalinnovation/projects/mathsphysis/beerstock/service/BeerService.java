@@ -48,6 +48,11 @@ public class BeerService {
         beerRepository.deleteById(id);
     }
 
+    public BeerDTO findById(Long id) throws BeerNotFoundException {
+        Beer beerFound = verifyIfExists(id);
+        return beerMapper.toDTO(beerFound);
+    }
+
     public MessageResponseDTO updateById(Long id, BeerDTO beerDTO) throws BeerNotFoundException {
         verifyIfExists(id);
         Beer beerToUpdate = beerMapper.toModel(beerDTO);
@@ -75,4 +80,6 @@ public class BeerService {
     private Beer verifyIfExists(Long id) throws BeerNotFoundException {
         return beerRepository.findById(id).orElseThrow(() -> new BeerNotFoundException(id));
     }
+
+
 }
