@@ -57,6 +57,11 @@ public class BeerService {
         return getMessageResponseDTO("Updated Beer with ID: " + updatedBeer.getId());
     }
 
+    private MessageResponseDTO getMessageResponseDTO(String message) {
+        return MessageResponseDTO.builder()
+                .message(message)
+                .build();
+    }
 
 
     private void verifyIfIsAlreadyRegistered(String name) throws BeerAlreadyRegisteredException {
