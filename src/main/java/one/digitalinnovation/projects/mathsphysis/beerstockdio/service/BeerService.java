@@ -91,11 +91,15 @@ public class BeerService {
             throw new BeerStockExceededException(id, quantityToIncrement);
         }
 
-        if(quantityToIncrement > beerToIncrementStock.getMax() - beerToIncrementStock.getQuantity()){
+        Integer amountLeftToMax = beerToIncrementStock.getMax() - beerToIncrementStock.getQuantity();
+
+        if(quantityToIncrement > amountLeftToMax){
             throw new BeerStockExceededException(id, quantityToIncrement);
         }
 
-        beerToIncrementStock.setQuantity(beerToIncrementStock.getQuantity() + quantityToIncrement);
+        Integer quantityAfterIncrement = beerToIncrementStock.getQuantity() + quantityToIncrement;
+
+        beerToIncrementStock.setQuantity(quantityAfterIncrement);
         Beer incrementedBeerStock = beerRepository.save(beerToIncrementStock);
         return beerMapper.toDTO(incrementedBeerStock);
 
@@ -108,7 +112,9 @@ public class BeerService {
             throw new BeerNegativeStockException(id, quantityToDecrement);
         }
 
-        beerToDecrementStock.setQuantity(beerToDecrementStock.getQuantity() - quantityToDecrement);
+        Integer quantityAfterDecrement = beerToDecrementStock.getQuantity() - quantityToDecrement;
+
+        beerToDecrementStock.setQuantity(quantityAfterDecrement);
         Beer incrementedBeerStock = beerRepository.save(beerToDecrementStock);
         return beerMapper.toDTO(incrementedBeerStock);
 
