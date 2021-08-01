@@ -3,6 +3,7 @@ package one.digitalinnovation.projects.mathsphysis.beerstockdio.controller;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.builder.BeerDTOBuilder;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.request.BeerDTO;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.response.MessageResponseDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.entity.Beer;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerAlreadyRegisteredException;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerNotFoundException;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.service.BeerService;
@@ -18,9 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.util.Collections;
+
 import static one.digitalinnovation.projects.mathsphysis.beerstockdio.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,7 +55,7 @@ public class BeerControllerTest {
     }
 
     @Test
-    void whenPOSTIsCalledThenBeerIsCreated() throws Exception {
+    void whenPOSTIsCalledThenRespondWithCreatedStatus() throws Exception {
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
 
         when(beerService.createBeer(beerDTO)).thenReturn(beerDTO);
@@ -67,7 +70,7 @@ public class BeerControllerTest {
     }
 
     @Test
-    void whenPOSTIsCalledWithoutRequiredFieldThenRespondsWithBadRequestStatus() throws Exception {
+    void whenPOSTIsCalledWithoutRequiredFieldThenRespondWithBadRequestStatus() throws Exception {
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         beerDTO.setBrand(null);
 
@@ -78,7 +81,7 @@ public class BeerControllerTest {
     }
 
     @Test
-    void whenPUTIsCalledThenBeerIsUpdated() throws Exception {
+    void whenPUTIsCalledThenRespondWithOkStatus() throws Exception {
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         MessageResponseDTO expectedMessageResponseDTO = MessageResponseDTO.builder().message("Updated Beer with ID: " + beerDTO.getId()).build();
 
@@ -92,7 +95,7 @@ public class BeerControllerTest {
     }
 
     @Test
-    void whenPUTIsCalledWithoutRequiredFieldThenRespondsWithBadRequestStatus() throws Exception {
+    void whenPUTIsCalledWithoutRequiredFieldThenRespondWithBadRequestStatus() throws Exception {
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         beerDTO.setBrand(null);
 
@@ -103,7 +106,7 @@ public class BeerControllerTest {
     }
 
     @Test
-    void whenPUTIsCalledWithInvalidIdThenRespondsWithNotFoundStatus() throws Exception {
+    void whenPUTIsCalledWithInvalidIdThenRespondWithNotFoundStatus() throws Exception {
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
 
         when(beerService.updateById(INVALID_BEER_ID, beerDTO)).thenThrow(BeerNotFoundException.class);
@@ -115,7 +118,7 @@ public class BeerControllerTest {
     }
 
     @Test
-    void whenGETIsCalledWithValidNameThenRespondsWithOKStatus() throws Exception {
+    void whenGETIsCalledWithValidNameThenRespondWithOKStatus() throws Exception {
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
 
         when(beerService.findByName(beerDTO.getName())).thenReturn(beerDTO);
@@ -129,13 +132,73 @@ public class BeerControllerTest {
     }
 
     @Test
-    void whenGETIsCalledWithInvalidNameThenRespondsWithNotFoundStatus() throws Exception {
+    void whenGETIsCalledWithInvalidNameThenRespondWithNotFoundStatus() throws Exception {
 
         when(beerService.findByName(NOT_EXISTING_BEER_NAME)).thenThrow(BeerNotFoundException.class);
 
         mockMvc.perform(get(BEER_API_URL_PATH + "/" + NOT_EXISTING_BEER_NAME)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void whenGETIsCalledWithValidIdThenRespondWithNotFoundStatus() throws Exception {
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+
+        when(beerService.findById(VALID_BEER_ID)).thenReturn(expectedBeerDTO);
+
+        mockMvc.perform(get(BEER_API_URL_PATH + "?id=" + VALID_BEER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(expectedBeerDTO.getName())))
+                .andExpect(jsonPath("$.brand", is(expectedBeerDTO.getBrand())))
+                .andExpect(jsonPath("$.type", is(expectedBeerDTO.getType().toString())));
+    }
+
+    @Test
+    void whenGETIsCalledWithInvalidIdThenRespondWithNotFoundStatus() throws Exception {
+
+        when(beerService.findById(INVALID_BEER_ID)).thenThrow(BeerNotFoundException.class);
+
+        mockMvc.perform(get(BEER_API_URL_PATH + "?id=" + INVALID_BEER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void whenGETListWithBeersIsCalledThenReturnRespondWithOkStatus() throws Exception {
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+
+        when(beerService.listAll()).thenReturn(Collections.singletonList(expectedBeerDTO));
+
+        mockMvc.perform(get(BEER_API_URL_PATH)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is(expectedBeerDTO.getName())))
+                .andExpect(jsonPath("$[0].brand", is(expectedBeerDTO.getBrand())))
+                .andExpect(jsonPath("$[0].type", is(expectedBeerDTO.getType().toString())));
+    }
+
+    @Test
+    void whenDELETEIsCalledWithValidIdThenRespondWithNoContentStatus () throws Exception {
+        doNothing().when(beerService).deleteById(VALID_BEER_ID);
+
+        mockMvc.perform(delete(BEER_API_URL_PATH + "/" + VALID_BEER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(beerService, times(1)).deleteById(VALID_BEER_ID);
+    }
+
+    @Test
+    void whenDELETEIsCalledWithInvalidIdThenRespondWithNotFoundStatus () throws Exception {
+        doThrow(BeerNotFoundException.class).when(beerService).deleteById(INVALID_BEER_ID);
+
+        mockMvc.perform(delete(BEER_API_URL_PATH + "/" + INVALID_BEER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        verify(beerService, times(1)).deleteById(INVALID_BEER_ID);
     }
 
 }

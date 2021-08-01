@@ -118,7 +118,7 @@ public class BeerServiceTest {
     }
 
     @Test
-    void whenBeerAndNotExistingIdInformedThenThrowAnException() {
+    void whenBeerAndNotExistingIdInformedThenItShouldThrowAnException() {
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
 
         when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
@@ -147,5 +147,29 @@ public class BeerServiceTest {
         List<BeerDTO> returnedBeerDTOList = beerService.listAll();
 
         assertThat(returnedBeerDTOList, is(empty()));
+    }
+
+    @Test
+    void whenBeerValidIdIsInformedThenTheBeerShouldBeDeleted() throws BeerNotFoundException {
+        BeerDTO expectedDeletedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedDeletedBeer = beerMapper.toModel(expectedDeletedBeerDTO);
+
+        when(beerRepository.findById(VALID_BEER_ID)).thenReturn(Optional.of(expectedDeletedBeer));
+
+        doNothing().when(beerRepository).deleteById(VALID_BEER_ID);
+
+        beerService.deleteById(VALID_BEER_ID);
+
+        verify(beerRepository, times(1)).findById(VALID_BEER_ID);
+        verify(beerRepository, times(1)).deleteById(VALID_BEER_ID);
+    }
+
+    @Test
+    void whenBeerInvalidIdIsInformedThenItShouldThrowAnException() {
+
+        when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
+
+        assertThrows(BeerNotFoundException.class, () -> beerService.deleteById(INVALID_BEER_ID));
+
     }
 }
