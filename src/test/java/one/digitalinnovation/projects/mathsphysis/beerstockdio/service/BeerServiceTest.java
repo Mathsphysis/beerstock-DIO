@@ -4,6 +4,7 @@ import one.digitalinnovation.projects.mathsphysis.beerstockdio.builder.BeerDTOBu
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.request.BeerDTO;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.entity.Beer;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerAlreadyRegisteredException;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerNotFoundException;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.mapper.BeerMapper;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.repository.BeerRepository;
 import org.junit.jupiter.api.Assertions;
@@ -49,5 +50,27 @@ public class BeerServiceTest {
         Mockito.when(beerRepository.findByName(beerDTO.getName())).thenReturn(Optional.of(beer));
 
         Assertions.assertThrows(BeerAlreadyRegisteredException.class, () -> beerService.createBeer(beerDTO));
+    }
+
+    @Test
+    void whenBeerIdInformedThenItShouldReturnExistingBeerDTO() throws BeerNotFoundException {
+        Long id = 1L;
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Optional<Beer> optBeer = Optional.of(beerMapper.toModel(beerDTO));
+
+        Mockito.when(beerRepository.findById(id)).thenReturn(optBeer);
+
+        BeerDTO returnedBeerDTO = beerService.findById(id);
+
+        Assertions.assertEquals(beerDTO, returnedBeerDTO);
+    }
+
+    @Test
+    void whenBeerNotExistingIdInformedThenItShouldThrowAnException() throws BeerNotFoundException {
+        Long id = 2L;
+
+        Mockito.when(beerRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(BeerNotFoundException.class, () -> beerService.findById(id));
     }
 }
