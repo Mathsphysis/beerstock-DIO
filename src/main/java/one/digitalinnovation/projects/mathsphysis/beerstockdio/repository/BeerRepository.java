@@ -1,6 +1,6 @@
-package one.digitalinnovation.projects.mathsphysis.beerstock.repository;
+package one.digitalinnovation.projects.mathsphysis.beerstockdio.repository;
 
-import one.digitalinnovation.projects.mathsphysis.beerstock.entity.Beer;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.entity.Beer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

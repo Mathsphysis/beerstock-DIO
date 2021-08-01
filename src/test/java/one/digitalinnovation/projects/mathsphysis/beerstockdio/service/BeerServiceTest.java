@@ -1,11 +1,11 @@
-package one.digitalinnovation.projects.mathsphysis.beerstock.service;
+package one.digitalinnovation.projects.mathsphysis.beerstockdio.service;
 
-import one.digitalinnovation.projects.mathsphysis.beerstock.builder.BeerDTOBuilder;
-import one.digitalinnovation.projects.mathsphysis.beerstock.dto.request.BeerDTO;
-import one.digitalinnovation.projects.mathsphysis.beerstock.entity.Beer;
-import one.digitalinnovation.projects.mathsphysis.beerstock.exception.BeerAlreadyRegisteredException;
-import one.digitalinnovation.projects.mathsphysis.beerstock.mapper.BeerMapper;
-import one.digitalinnovation.projects.mathsphysis.beerstock.repository.BeerRepository;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.builder.BeerDTOBuilder;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.request.BeerDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.entity.Beer;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerAlreadyRegisteredException;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.mapper.BeerMapper;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.repository.BeerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

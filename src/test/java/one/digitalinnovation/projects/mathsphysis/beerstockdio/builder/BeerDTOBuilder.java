@@ -1,14 +1,8 @@
-package one.digitalinnovation.projects.mathsphysis.beerstock.builder;
+package one.digitalinnovation.projects.mathsphysis.beerstockdio.builder;
 
 import lombok.Builder;
-import one.digitalinnovation.projects.mathsphysis.beerstock.dto.request.BeerDTO;
-import one.digitalinnovation.projects.mathsphysis.beerstock.enums.BeerType;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.request.BeerDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.enums.BeerType;
 
 @Builder
 public class BeerDTOBuilder {

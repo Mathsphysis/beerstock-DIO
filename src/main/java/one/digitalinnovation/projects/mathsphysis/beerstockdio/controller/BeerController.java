@@ -1,11 +1,11 @@
-package one.digitalinnovation.projects.mathsphysis.beerstock.controller;
+package one.digitalinnovation.projects.mathsphysis.beerstockdio.controller;
 
 import lombok.AllArgsConstructor;
-import one.digitalinnovation.projects.mathsphysis.beerstock.dto.request.BeerDTO;
-import one.digitalinnovation.projects.mathsphysis.beerstock.dto.response.MessageResponseDTO;
-import one.digitalinnovation.projects.mathsphysis.beerstock.exception.BeerAlreadyRegisteredException;
-import one.digitalinnovation.projects.mathsphysis.beerstock.exception.BeerNotFoundException;
-import one.digitalinnovation.projects.mathsphysis.beerstock.service.BeerService;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.request.BeerDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.response.MessageResponseDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerAlreadyRegisteredException;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerNotFoundException;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.service.BeerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class BeerController {
     }
 
     @GetMapping
-    public List<BeerDTO> listBeers(){
+    public List<BeerDTO> listBeers() {
         return beerService.listAll();
     }
 
