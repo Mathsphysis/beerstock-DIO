@@ -41,7 +41,6 @@ mvn jacoco:report
 ```
 
 The html report can be found at target/site/jacoco/index.html  
-You can find a copy of the [Current Jacoco Report Here](./jacocoReport.html)
 <hr>
 
 ## Running the Project
