@@ -86,10 +86,10 @@ public class BeerService {
         Optional<Beer> optBeer = beerRepository.findById(id);
 
         if(optBeer.isPresent()) {
-            Beer beer = optBeer.get();
-            beer.setQuantity(beer.getQuantity()+ quantityToIncrement);
-//            Beer incrementedBeer = beerRepository.save(beer);
-            return beerMapper.toDTO(beer);
+            Beer beerToIncrementStock = optBeer.get();
+            beerToIncrementStock.setQuantity(beerToIncrementStock.getQuantity()+ quantityToIncrement);
+            Beer incrementedBeerStock = beerRepository.save(beerToIncrementStock);
+            return beerMapper.toDTO(incrementedBeerStock);
         }
         throw new BeerNotFoundException(id);
     }
