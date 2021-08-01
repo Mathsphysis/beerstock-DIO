@@ -7,6 +7,8 @@ import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerAlr
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerNotFoundException;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.mapper.BeerMapper;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.repository.BeerRepository;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BeerServiceTest {
@@ -31,46 +38,46 @@ public class BeerServiceTest {
 
     @Test
     void whenBeerInformedThenItShouldBeCreated() throws BeerAlreadyRegisteredException {
-        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-        Beer expectedBeer = beerMapper.toModel(beerDTO);
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
 
-        Mockito.when(beerRepository.findByName(beerDTO.getName())).thenReturn(Optional.empty());
-        Mockito.when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
+        when(beerRepository.findByName(expectedBeerDTO.getName())).thenReturn(Optional.empty());
+        when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
 
-        BeerDTO createdBeerDTO = beerService.createBeer(beerDTO);
-        
-        Assertions.assertEquals(beerDTO, createdBeerDTO);
+        BeerDTO createdBeerDTO = beerService.createBeer(expectedBeerDTO);
+
+        assertThat(expectedBeerDTO, is(createdBeerDTO));
     }
 
     @Test
     void whenInformedBeerAlreadyExistsThenItShouldThrowAnException() throws BeerAlreadyRegisteredException {
-        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-        Beer beer = beerMapper.toModel(beerDTO);
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer beer = beerMapper.toModel(expectedBeerDTO);
 
-        Mockito.when(beerRepository.findByName(beerDTO.getName())).thenReturn(Optional.of(beer));
-
-        Assertions.assertThrows(BeerAlreadyRegisteredException.class, () -> beerService.createBeer(beerDTO));
+        when(beerRepository.findByName(expectedBeerDTO.getName())).thenReturn(Optional.of(beer));
+        
+        assertThrows(BeerAlreadyRegisteredException.class, () -> beerService.createBeer(expectedBeerDTO));
     }
 
     @Test
     void whenBeerIdInformedThenItShouldReturnExistingBeerDTO() throws BeerNotFoundException {
         Long id = 1L;
-        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-        Optional<Beer> optBeer = Optional.of(beerMapper.toModel(beerDTO));
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Optional<Beer> optBeer = Optional.of(beerMapper.toModel(expectedBeerDTO));
 
-        Mockito.when(beerRepository.findById(id)).thenReturn(optBeer);
+        when(beerRepository.findById(id)).thenReturn(optBeer);
 
         BeerDTO returnedBeerDTO = beerService.findById(id);
 
-        Assertions.assertEquals(beerDTO, returnedBeerDTO);
+        assertThat(expectedBeerDTO, is(returnedBeerDTO));
     }
 
     @Test
     void whenBeerNotExistingIdInformedThenItShouldThrowAnException() throws BeerNotFoundException {
         Long id = 2L;
 
-        Mockito.when(beerRepository.findById(id)).thenReturn(Optional.empty());
+        when(beerRepository.findById(id)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(BeerNotFoundException.class, () -> beerService.findById(id));
+        assertThrows(BeerNotFoundException.class, () -> beerService.findById(id));
     }
 }
