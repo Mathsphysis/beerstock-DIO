@@ -172,4 +172,17 @@ public class BeerServiceTest {
         assertThrows(BeerNotFoundException.class, () -> beerService.deleteById(INVALID_BEER_ID));
 
     }
+
+    @Test
+    void whenIncrementIsCalledThenIncrementBeerStock() {
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
+
+        Integer quantityToIncrement = 10;
+        Integer expectedQuantityAfterIncrement = expectedBeerDTO.getQuantity() + quantityToIncrement;
+        BeerDTO incrementedBeerDTO = beerService.increment(expectedBeerDTO.getId(), quantityToIncrement);
+
+        assertThat(expectedQuantityAfterIncrement, is(incrementedBeerDTO.getQuantity()));
+        assertThat(expectedQuantityAfterIncrement, is(lessThanOrEqualTo(expectedBeerDTO.getMax())));
+    }
 }

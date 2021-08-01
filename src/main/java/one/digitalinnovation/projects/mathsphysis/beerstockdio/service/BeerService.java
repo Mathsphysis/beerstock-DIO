@@ -82,4 +82,7 @@ public class BeerService {
     }
 
 
+    public BeerDTO increment(Long id, Integer quantityToIncrement) {
+        return null;
+    }
 }
