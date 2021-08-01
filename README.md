@@ -50,7 +50,7 @@ mvn spring-boot:run
 ```
 
 The api will be served at port 8080.  
-In order to access the api path is [localhost:8080/api/v1/beers](http:localhost:8080/api/v1/beers)  
+In order to access the api, path is [localhost:8080/api/v1/beers](http:localhost:8080/api/v1/beers)  
 
 ## Swagger-UI Opendoc API Documentation
 You can find the swagger-ui OpenAPI Documentation at [localhost:8080/swagger-ui.html](http:localhost:8080/swagger-ui.html)
