@@ -18,9 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -132,14 +130,22 @@ public class BeerServiceTest {
     void whenListAllIsCalledThenReturnListOfRegisteredBeerDTO() {
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
-        List<BeerDTO> expectedBeerDTOList = new ArrayList<>();
-        expectedBeerDTOList.add(expectedBeerDTO);
-        List<Beer> expectedBeerList = new ArrayList<>();
-        expectedBeerList.add(expectedBeer);
+        List<BeerDTO> expectedBeerDTOList = Collections.singletonList(expectedBeerDTO);
 
-        when(beerRepository.findAll()).thenReturn(expectedBeerList);
+        when(beerRepository.findAll()).thenReturn(Collections.singletonList(expectedBeer));
 
         List<BeerDTO> returnedBeerDTOList = beerService.listAll();
+
         assertThat(returnedBeerDTOList, is(expectedBeerDTOList));
+    }
+
+    @Test
+    void whenListAllIsCalledThenReturnAnEmptyList() {
+
+        when(beerRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+
+        List<BeerDTO> returnedBeerDTOList = beerService.listAll();
+
+        assertThat(returnedBeerDTOList, is(empty()));
     }
 }
