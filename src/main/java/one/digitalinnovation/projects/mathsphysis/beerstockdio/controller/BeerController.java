@@ -36,8 +36,8 @@ public class BeerController {
         return beerService.findByName(name);
     }
 
-    @GetMapping("/{id}")
-    public BeerDTO findById(@PathVariable Long id) throws BeerNotFoundException {
+    @GetMapping(params = {"id"})
+    public BeerDTO findById(@RequestParam Long id) throws BeerNotFoundException {
         return beerService.findById(id);
     }
 
