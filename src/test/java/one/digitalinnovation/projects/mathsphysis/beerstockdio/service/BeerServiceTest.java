@@ -40,4 +40,14 @@ public class BeerServiceTest {
         
         Assertions.assertEquals(beerDTO, createdBeerDTO);
     }
+
+    @Test
+    void whenInformedBeerAlreadyExistsThenItShouldThrowAnException() throws BeerAlreadyRegisteredException {
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer beer = beerMapper.toModel(beerDTO);
+
+        Mockito.when(beerRepository.findByName(beerDTO.getName())).thenReturn(Optional.of(beer));
+
+        Assertions.assertThrows(BeerAlreadyRegisteredException.class, () -> beerService.createBeer(beerDTO));
+    }
 }
