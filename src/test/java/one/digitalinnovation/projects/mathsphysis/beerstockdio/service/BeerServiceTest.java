@@ -178,6 +178,9 @@ public class BeerServiceTest {
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
 
+//        when(beerRepository.findById(expectedBeerDTO.getId())).thenReturn(Optional.of(expectedBeer));
+//        when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
+
         Integer quantityToIncrement = 10;
         Integer expectedQuantityAfterIncrement = expectedBeerDTO.getQuantity() + quantityToIncrement;
         BeerDTO incrementedBeerDTO = beerService.increment(expectedBeerDTO.getId(), quantityToIncrement);

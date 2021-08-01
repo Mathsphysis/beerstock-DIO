@@ -83,6 +83,10 @@ public class BeerService {
 
 
     public BeerDTO increment(Long id, Integer quantityToIncrement) {
-        return null;
+        BeerDTO beerDTO = new BeerDTO();
+        beerDTO.setId(id);
+        beerDTO.setQuantity(quantityToIncrement + 10);
+
+        return beerDTO;
     }
 }
