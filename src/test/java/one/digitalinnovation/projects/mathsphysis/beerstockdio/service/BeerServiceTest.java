@@ -37,7 +37,7 @@ public class BeerServiceTest {
         Mockito.when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
 
         BeerDTO createdBeerDTO = beerService.createBeer(beerDTO);
-
-        Assertions.assertEquals(beerDTO.getId(), createdBeerDTO.getId());
+        
+        Assertions.assertEquals(beerDTO, createdBeerDTO);
     }
 }
