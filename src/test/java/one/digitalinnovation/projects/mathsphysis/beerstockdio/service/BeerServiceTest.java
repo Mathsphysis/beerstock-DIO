@@ -29,7 +29,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BeerServiceTest {
-    private static final Long INVALID_BEER_ID = 1L;
+    private static final Long INVALID_BEER_ID = 2L;
+    private static final Long VALID_BEER_ID = 1L;
+    private static final String UPDATE_MESSAGE = "Updated Beer with ID: ";
 
     @Mock
     private BeerRepository beerRepository;
@@ -49,7 +51,7 @@ public class BeerServiceTest {
 
         BeerDTO createdBeerDTO = beerService.createBeer(expectedBeerDTO);
 
-        assertThat(expectedBeerDTO, is(createdBeerDTO));
+        assertThat(createdBeerDTO, is(expectedBeerDTO));
     }
 
     @Test
@@ -64,15 +66,14 @@ public class BeerServiceTest {
 
     @Test
     void whenInformedBeerNameExistsThenItShouldReturnRegisteredBeerDTO() throws BeerNotFoundException {
-        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-        Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
-        Optional<Beer> optBeer = Optional.of(expectedBeer);
+        BeerDTO expectedFoundBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedFoundBeer = beerMapper.toModel(expectedFoundBeerDTO);
 
-        when(beerRepository.findByName(expectedBeerDTO.getName())).thenReturn(optBeer);
+        when(beerRepository.findByName(expectedFoundBeerDTO.getName())).thenReturn(Optional.of(expectedFoundBeer));
 
-        BeerDTO returnedBeerDTO = beerService.findByName(expectedBeerDTO.getName());
+        BeerDTO returnedBeerDTO = beerService.findByName(expectedFoundBeerDTO.getName());
 
-        assertThat(expectedBeerDTO, is(returnedBeerDTO));
+        assertThat(returnedBeerDTO, is(expectedFoundBeerDTO));
     }
 
     @Test
@@ -86,15 +87,14 @@ public class BeerServiceTest {
 
     @Test
     void whenInformedBeerIdAlreadyExistsThenItShouldReturnRegisteredBeerDTO() throws BeerNotFoundException {
-        Long id = 1L;
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Optional<Beer> optBeer = Optional.of(beerMapper.toModel(expectedBeerDTO));
 
-        when(beerRepository.findById(id)).thenReturn(optBeer);
+        when(beerRepository.findById(VALID_BEER_ID)).thenReturn(optBeer);
 
-        BeerDTO returnedBeerDTO = beerService.findById(id);
+        BeerDTO returnedBeerDTO = beerService.findById(VALID_BEER_ID);
 
-        assertThat(expectedBeerDTO, is(returnedBeerDTO));
+        assertThat(returnedBeerDTO, is(expectedBeerDTO));
     }
 
     @Test
@@ -109,14 +109,14 @@ public class BeerServiceTest {
     void whenBeerAndIdInformedThenReturnUpdateMessage() throws BeerNotFoundException {
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
-        MessageResponseDTO expectedMessage = MessageResponseDTO.builder().message("Updated Beer with ID: 1").build();
+        MessageResponseDTO expectedMessage = MessageResponseDTO.builder().message(UPDATE_MESSAGE + expectedBeer.getId()).build();
 
         when(beerRepository.findById(expectedBeerDTO.getId())).thenReturn(Optional.of(expectedBeer));
         when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
 
         MessageResponseDTO createdMessage = beerService.updateById(expectedBeerDTO.getId(), expectedBeerDTO);
 
-        assertThat(expectedMessage, is(createdMessage));
+        assertThat(createdMessage, is(expectedMessage));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class BeerServiceTest {
 
         when(beerRepository.findAll()).thenReturn(expectedBeerList);
 
-        List<BeerDTO> createdBeerDTOList = beerService.listAll();
-        assertThat(expectedBeerDTOList, is(createdBeerDTOList));
+        List<BeerDTO> returnedBeerDTOList = beerService.listAll();
+        assertThat(returnedBeerDTOList, is(expectedBeerDTOList));
     }
 }

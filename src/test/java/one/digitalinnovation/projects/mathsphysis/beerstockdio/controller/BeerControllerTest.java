@@ -2,7 +2,9 @@ package one.digitalinnovation.projects.mathsphysis.beerstockdio.controller;
 
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.builder.BeerDTOBuilder;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.request.BeerDTO;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.dto.response.MessageResponseDTO;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerAlreadyRegisteredException;
+import one.digitalinnovation.projects.mathsphysis.beerstockdio.exception.BeerNotFoundException;
 import one.digitalinnovation.projects.mathsphysis.beerstockdio.service.BeerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import static one.digitalinnovation.projects.mathsphysis.beerstockdio.utils.Json
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,6 +64,54 @@ public class BeerControllerTest {
                     .andExpect(jsonPath("$.name", is(beerDTO.getName())))
                     .andExpect(jsonPath("$.brand", is(beerDTO.getBrand())))
                     .andExpect(jsonPath("$.type", is(beerDTO.getType().toString())));
+    }
+
+    @Test
+    void whenPOSTIsCalledWithoutRequiredFieldThenRespondsWithBadRequestResponse() throws Exception {
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        beerDTO.setBrand(null);
+
+        mockMvc.perform(post(BEER_API_URL_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(beerDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenPUTIsCalledThenBeerIsUpdated() throws Exception, BeerNotFoundException {
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        MessageResponseDTO expectedMessageResponseDTO = MessageResponseDTO.builder().message("Updated Beer with ID: " + beerDTO.getId()).build();
+
+        when(beerService.updateById(VALID_BEER_ID, beerDTO)).thenReturn(expectedMessageResponseDTO);
+
+        mockMvc.perform(put(BEER_API_URL_PATH + "/" + VALID_BEER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(beerDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(expectedMessageResponseDTO.getMessage())));
+    }
+
+    @Test
+    void whenPUTIsCalledWithoutRequiredFieldThenRespondsWithBadRequestResponse() throws Exception {
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        beerDTO.setBrand(null);
+
+        mockMvc.perform(put(BEER_API_URL_PATH + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(beerDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenPUTIsCalledWithInvalidIdThenRespondsWithNotFoundResponse() throws Exception, BeerNotFoundException {
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+
+        when(beerService.updateById(INVALID_BEER_ID, beerDTO)).thenThrow(new BeerNotFoundException(INVALID_BEER_ID));
+
+        mockMvc.perform(put(BEER_API_URL_PATH + "/" + INVALID_BEER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(beerDTO)))
+                .andExpect(status().isNotFound());
     }
 
 }
