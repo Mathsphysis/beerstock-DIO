@@ -82,11 +82,15 @@ public class BeerService {
     }
 
 
-    public BeerDTO increment(Long id, Integer quantityToIncrement) {
-        BeerDTO beerDTO = new BeerDTO();
-        beerDTO.setId(id);
-        beerDTO.setQuantity(quantityToIncrement + 10);
+    public BeerDTO increment(Long id, Integer quantityToIncrement) throws BeerNotFoundException {
+        Optional<Beer> optBeer = beerRepository.findById(id);
 
-        return beerDTO;
+        if(optBeer.isPresent()) {
+            Beer beer = optBeer.get();
+            beer.setQuantity(beer.getQuantity()+ quantityToIncrement);
+//            Beer incrementedBeer = beerRepository.save(beer);
+            return beerMapper.toDTO(beer);
+        }
+        throw new BeerNotFoundException(id);
     }
 }

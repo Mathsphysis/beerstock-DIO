@@ -174,11 +174,11 @@ public class BeerServiceTest {
     }
 
     @Test
-    void whenIncrementIsCalledThenIncrementBeerStock() {
+    void whenIncrementIsCalledThenIncrementBeerStock() throws BeerNotFoundException {
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
 
-//        when(beerRepository.findById(expectedBeerDTO.getId())).thenReturn(Optional.of(expectedBeer));
+        when(beerRepository.findById(expectedBeerDTO.getId())).thenReturn(Optional.of(expectedBeer));
 //        when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
 
         Integer quantityToIncrement = 10;
