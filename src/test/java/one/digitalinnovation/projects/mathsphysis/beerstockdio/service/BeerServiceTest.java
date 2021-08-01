@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -124,5 +126,20 @@ public class BeerServiceTest {
         when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
 
         assertThrows(BeerNotFoundException.class, () -> beerService.updateById(INVALID_BEER_ID, expectedBeerDTO));
+    }
+
+    @Test
+    void whenListAllIsCalledThenReturnListOfRegisteredBeerDTO() {
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
+        List<BeerDTO> expectedBeerDTOList = new ArrayList<>();
+        expectedBeerDTOList.add(expectedBeerDTO);
+        List<Beer> expectedBeerList = new ArrayList<>();
+        expectedBeerList.add(expectedBeer);
+
+        when(beerRepository.findAll()).thenReturn(expectedBeerList);
+
+        List<BeerDTO> createdBeerDTOList = beerService.listAll();
+        assertThat(expectedBeerDTOList, is(createdBeerDTOList));
     }
 }
