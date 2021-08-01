@@ -28,10 +28,10 @@ public class BeerDTO {
     @Size(min = 2, max = 100)
     private String brand;
 
-    @NotEmpty
+    @NotNull
     private Integer max;
 
-    @NotEmpty
+    @NotNull
     private Integer quantity;
 
     @Enumerated(EnumType.STRING)
